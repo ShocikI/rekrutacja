@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+
+    {% load custom_filters %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/calendar.css' %}">
+</head>
+
+<body>
+    <div class="calendar-container">
+        <div class="header">
+            <a href="{% url 'calendar_view' year=previous_year month=previous_month %}"
+                class="arrow left-arrow">&#9664;</a>
+            <h2 class="month-year">{{ calendar.month_name }} {{ year }}</h2>
+            <a href="{% url 'calendar_view' year=next_year month=next_month %}" class="arrow right-arrow">&#9654;</a>
+        </div>
+        <!-- Nagłówki dni tygodnia -->
+        <div class="weekdays">
+            <div>Poniedziałek</div>
+            <div>Wtorek</div>
+            <div>Środa</div>
+            <div>Czwartek</div>
+            <div>Piątek</div>
+            <div>Sobota</div>
+            <div>Niedziela</div>
+        </div>
+
+        <div class="days">
+            <!-- Puste dni przed pierwszym dniem miesiąca -->
+            {% for i in calendar.empty_days %}
+            <div class="day empty"></div>
+            {% endfor %}
+
+            <!-- Dni miesiąca -->
+            {% for day in calendar.events_by_day %}
+            <a href="{% url 'day_view' year=year month=month day=day %}" class="day-link">
+                <div class="day">
+                    <p>{{ day }}</p>
+                    {% if calendar.events_by_day|get_item:day %}
+                    <div class="events">
+                        {% for event in calendar.events_by_day|get_item:day %}
+                        <div class="event">
+                            <strong>{{ event.name }}</strong>
+                            {% if event.actual_duration == 0 %}
+                            {% if event.start_date.hour %}
+                            <br> Start o {{ event.start_date.hour }}:00
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>

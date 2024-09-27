@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+
+    {% load custom_filters %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/day.css' %}">
+</head>
+
+<body>
+    <div class="calendar-container">
+        <div class="header">
+            <a href="{% url 'calendar_view' year=year month=month %}" class="month-link">
+                <h1 class="month-year">&#9664; {{ day }} {{ calendar.month_name }} {{ year }}</h1>
+            </a>
+        </div>
+        <div class="day-container">
+            {% for event in day_events %}
+            <div class="event">
+                <div class="event-description">
+                    <!-- Ukryty checkbox, kontrolujący rozwijanie szczegółów -->
+                    <input type="checkbox" id="toggle-event-{{ forloop.counter }}" class="toggle-checkbox">
+
+                    <label for="toggle-event-{{ forloop.counter }}" class="event-summary">
+                        <h1>{{ event.name }} <span class="toggle-arrow">▾</span></h1>
+                        <p>Start o {{ event.start_time }}</p>
+                        <p class="short-description">{{ event.short_description }}</p>
+                    </label>
+
+                    <!-- Szczegóły, które mają być widoczne po kliknięciu -->
+                    <div class="event-details">
+                        <p>{{ event.long_description }}</p>
+                        <strong class="link">Link do wydarzenia {{ event.link }}</strong>
+                        <div class="tags">
+                            {% for tag in event.tags %}
+                            <p class="tag">{{ tag.name }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="image-container">
+                    <img src="{{ event.image_url }}" alt="{{ event.name }}" class="event-image">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+
+</html>
