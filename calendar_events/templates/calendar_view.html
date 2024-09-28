@@ -37,13 +37,13 @@
             {% endfor %}
 
             <!-- Dni miesiąca -->
-            {% for day in calendar.events_by_day %}
+            {% for day in events %}
             <a href="{% url 'day_view' year=year month=month day=day %}" class="day-link">
                 <div class="day">
                     <p>{{ day }}</p>
-                    {% if calendar.events_by_day|get_item:day %}
+                    {% if events|get_item:day %}
                     <div class="events">
-                        {% for event in calendar.events_by_day|get_item:day %}
+                        {% for event in events|get_item:day %}
                         <div class="event">
                             <strong>{{ event.name }}</strong>
                             {% if event.actual_duration == 0 %}
@@ -59,6 +59,8 @@
             </a>
             {% endfor %}
         </div>
+
+        <h2 class="error"><strong>{{ error }}</strong></h2>
     </div>
 </body>
 

@@ -132,3 +132,8 @@ html {
 
     border-radius: 10px;
 }
+
+.error {
+    color: red;
+    font-weight: 800;
+}

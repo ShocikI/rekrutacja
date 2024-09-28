@@ -17,7 +17,9 @@
             <a href="{% url 'calendar_view' year=year month=month %}" class="month-link">
                 <h1 class="month-year">&#9664; {{ day }} {{ calendar.month_name }} {{ year }}</h1>
             </a>
+            <br>
         </div>
+        <h2 class="error"><strong>{{ error }}</strong></h2>
         <div class="day-container">
             {% for event in day_events %}
             <div class="event">
@@ -27,7 +29,7 @@
 
                     <label for="toggle-event-{{ forloop.counter }}" class="event-summary">
                         <h1>{{ event.name }} <span class="toggle-arrow">▾</span></h1>
-                        <p>Start o {{ event.start_time }}</p>
+                        <p><strong>Start o {{ event.start_time }}</strong></p>
                         <p class="short-description">{{ event.short_description }}</p>
                     </label>
 

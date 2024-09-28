@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'calendar_events',
     'rest_framework',
-    'django-filters'
 ]
 
 MIDDLEWARE = [
