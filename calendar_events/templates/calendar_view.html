@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calendar</title>
 
-    {% load custom_filters %}
     {% load static %}
+    {% load custom_filters %}
     <link rel="stylesheet" href="{% static 'styles/calendar.css' %}">
 </head>
 
@@ -16,7 +16,8 @@
         <div class="header">
             <a href="{% url 'calendar_view' year=previous_year month=previous_month %}"
                 class="arrow left-arrow">&#9664;</a>
-            <h2 class="month-year">{{ calendar.month_name }} {{ year }}</h2>
+            <h2 class="month-year">{{ calendar.month_name }} {{ year|get_abs }}
+            </h2>
             <a href="{% url 'calendar_view' year=next_year month=next_month %}" class="arrow right-arrow">&#9654;</a>
         </div>
         <!-- Nagłówki dni tygodnia -->

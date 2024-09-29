@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import resolve, reverse
 from unittest.mock import patch
-from .views import get_events, get_month_name, start, calendar_view, day_view, get_date_data, get_event_by_id
+from .views import get_events, get_month_name, start, calendar_view, day_view, get_date_data, get_event_by_id, start_year, not_found_view
 from rekrutacja.settings import API_KEY, BASE_URL
 
 class UnitTests(TestCase):
@@ -9,18 +9,56 @@ class UnitTests(TestCase):
     # Sprawdzamy czy przy użyciu ścieżki startowej wyświetla się startowa strona
     def test_url_start(self):
         url = reverse("start")
+        client = Client()
+        response = client.get('')
         self.assertEqual(resolve(url).func, start)
+        self.assertEqual(response.status_code, 302) # Przekierowanie
+    
+    # Sprawdzamy czy przy użyciu ścieżki startowej wyświetla się startowa strona z rokiem
+    def test_url_start_year(self):
+        url = reverse("start_year", kwargs={'year':'2022'})
+        client = Client()
+        response = client.get('/2022/')
+        self.assertEqual(resolve(url).func, start_year)
+        self.assertEqual(response.status_code, 302) # Przekierowanie
 
     # Sprawdzamy czy przy użyciu ścieżki do danego miesiąca wyświetlony zostanie dany miesiąc
     def test_url_calendar_view(self):
-        url = reverse("calendar_view", kwargs={'year':2022, 'month':10})
+        url = reverse("calendar_view", kwargs={'year':'2022', 'month':'10'})
+        self.assertEqual(resolve(url).func, calendar_view)
+
+    # Sprawdzamy czy przy użyciu ścieżki do miesiąca spoza zakresu 1-12 wyświetlony zostanie dany miesiąc
+    def test_url_calendar_view_negative_month(self):
+        url = reverse("calendar_view", kwargs={'year':'2022', 'month':'-10'})
+        self.assertEqual(resolve(url).func, calendar_view)
+
+    # Sprawdzamy czy przy użyciu ścieżki do danego miesiąca wyświetlony zostanie dany miesiąc
+    def test_url_calendar_view_overlap_month(self):
+        url = reverse("calendar_view", kwargs={'year':'2022', 'month':'100'})
+        self.assertEqual(resolve(url).func, calendar_view)
+
+    # Sprawdzamy czy przy użyciu ścieżki do roku przed naszą erą zostanie wyświetlony kalendarz
+    def test_url_calendar_view_negative_year(self):
+        url = reverse("calendar_view", kwargs={'year':"-100", 'month':'10'})
         self.assertEqual(resolve(url).func, calendar_view)
 
     # Sprawdzamy czy przy użyciu ścieżki do danego dnia wyświetlony zostanie dany dzień
     def test_url_day_view(self):
-        url = reverse('day_view', kwargs={'year':2022, "month":10, "day":22})
+        url = reverse('day_view', kwargs={'year':'2022', "month":'10', "day":'22'})
         self.assertEqual(resolve(url).func, day_view)
-    
+
+    # Sprawdzamy czy przy użyciu ścieżki do roku przed naszą erą zostanie wyświetlony dany dzień
+    def test_url_day_view_negative_year(self):
+        url = reverse('day_view', kwargs={'year':'-100', "month":'10', "day":'22'})
+        self.assertEqual(resolve(url).func, day_view)
+
+    # Sprawdzamy widok nie znalezionej strony
+    def test_not_found_view(self):
+        client = Client()
+        response = client.get("/nie_ma_takiej_strony/")
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
+
     # test functions
     # Sprawdzamy czy uzyskamy odpowiednią nazwę miesiąca
     def test_get_month_name(self):
@@ -37,15 +75,8 @@ class UnitTests(TestCase):
         data = get_date_data(2022, 12)
         self.assertEqual(data, ('Grudzień', 11, 2022, 1, 2023))
         data = get_date_data(2022, 15)
-    
-    # Sprawdzamy czy uzyskamy odpowiednie dane do kalendarza przy liczbie reporezentującej miesiąc wykraczającej poza zakres 1-12
-    def test_det_date_data_overlap(self):
-        data = get_date_data(2022, -17) # -17 % 12 = 7
-        self.assertEqual(data, ("Lipiec", 6, 2021, 8, 2021))
-        data = get_date_data(2022, 18) # 18 % 12 = 6
-        self.assertEqual(data, ("Czerwiec", 5, 2023, 7, 2023))
 
-    # Test łączenia z API
+    # test API
     @patch("calendar_events.views.requests.get")
     def test_get_events_success(self, mock_get):
         mock_get.return_value.status_code = 200

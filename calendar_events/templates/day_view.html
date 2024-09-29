@@ -15,7 +15,8 @@
     <div class="calendar-container">
         <div class="header">
             <a href="{% url 'calendar_view' year=year month=month %}" class="month-link">
-                <h1 class="month-year">&#9664; {{ day }} {{ calendar.month_name }} {{ year }}</h1>
+                <h1 class="month-year">
+                    &#9664; {{ day }} {{ calendar.month_name }} {{ year|get_abs }} </h1>
             </a>
             <br>
         </div>

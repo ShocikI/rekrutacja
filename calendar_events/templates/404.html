@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error 404!</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/404.css' %}">
+</head>
+
+<body>
+    <h1>Nie znaleziono strony</h1>
+    <p><strong>Tego miesiąca nie ma w tym kalendarzu :(</strong></p>
+    <a href="{% url 'start' %}">Przejdź do zdarzeń zaplanowanych na ten miesiąc</a>
+</body>
+
+</html>

@@ -14,11 +14,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.urls import path
+from django.urls import path, re_path
 from calendar_events import views
+from django.conf.urls import handler404
 
 urlpatterns = [
     path("", views.start, name='start'),
-    path("<int:year>/<int:month>/", views.calendar_view, name='calendar_view'),
-    path("<int:year>/<int:month>/<int:day>/", views.day_view, name='day_view'),
+    re_path(r'^(?P<year>-?\d+)/$', views.start_year, name='start_year'),
+    re_path(r'^(?P<year>-?\d+)/(?P<month>-?\d+)/$', views.calendar_view, name='calendar_view'),
+    re_path(r'^(?P<year>-?\d+)/(?P<month>-?\d+)/(?P<day>\d+)/$', views.day_view, name='day_view'),
 ]
+
+handler404 = views.not_found_view

@@ -1,0 +1,17 @@
+body,
+html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 205, 0.648);
+}
+
+h1 {
+    color: #a33;
+}
+
+a {
+    color: black;
+}

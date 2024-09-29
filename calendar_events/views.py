@@ -14,8 +14,26 @@ def start(request):
     month = today.month
 
     return redirect(reverse(calendar_view, kwargs={'year':year, 'month':month}))
+
+def start_year(request, year: str):
+    try:
+        year = int(year)
+    except:
+        return redirect('')
+    return redirect(reverse(calendar_view, kwargs={'year':f"{year}", 'month':"1"}))
     
-def calendar_view(request, year, month):
+def calendar_view(request, year: str, month: str):
+    try:
+        year = int(year)   
+        month = int(month) 
+    except:
+        return redirect('')
+    
+    if month < 1:
+        month = 1
+    if month > 12:
+        month = 12
+    
     # Połączenie z API
     all_events = get_events()
 
@@ -86,7 +104,21 @@ def calendar_view(request, year, month):
     })
     
 
-def day_view(request, year, month, day):
+def day_view(request, year: str, month: str, day: str):
+    try:
+        year = int(year)   
+        month = int(month) 
+        day = int(day)
+    except:
+        return redirect('')
+    if month < 1:
+        month = 1
+    if month > 12:
+        month = 12
+
+    _, num_days_in_month = monthrange(year, month)
+    if day > num_days_in_month:
+        day = num_days_in_month
     # Połączenie z API
     all_events = get_events()
 
@@ -141,6 +173,10 @@ def day_view(request, year, month, day):
         'calendar': calendar_data
     })
     
+
+def not_found_view(request, exception):
+    return render(request, '404.html', status=404)
+
 # Połączenia z API
 def get_events():
     url = f"{settings.BASE_URL}/events"
@@ -187,12 +223,6 @@ def get_month_name(month: int) -> str:
 
 
 def get_date_data(year: int, month: int) -> tuple:
-    # Sprawdzamy overlap month
-    if month < 1 or month > 12: 
-        year_decrease = int(month / 12)
-        year += year_decrease
-        month = month % 12
-
     # Obliczamy poprzedni i następny miesiąc
     if month == 1:
         previous_month = 12
