@@ -156,7 +156,7 @@ def get_events():
         return None
 
 
-def get_event_by_id(event_id):
+def get_event_by_id(event_id:int):
     url = f"{settings.BASE_URL}/events/{event_id}"
     headers = {
         'api-key': settings.API_KEY,
@@ -170,7 +170,7 @@ def get_event_by_id(event_id):
         return None
 
 # Funkcje użytkowe
-def get_month_name(month:int):
+def get_month_name(month: int) -> str:
     match month:
         case 1: return "Styczeń"
         case 2: return "Luty"
@@ -186,7 +186,13 @@ def get_month_name(month:int):
         case 12: return "Grudzień"
 
 
-def get_date_data(year: int, month: int):
+def get_date_data(year: int, month: int) -> tuple:
+    # Sprawdzamy overlap month
+    if month < 1 or month > 12: 
+        year_decrease = int(month / 12)
+        year += year_decrease
+        month = month % 12
+
     # Obliczamy poprzedni i następny miesiąc
     if month == 1:
         previous_month = 12

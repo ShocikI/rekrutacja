@@ -18,7 +18,7 @@ from django.urls import path
 from calendar_events import views
 
 urlpatterns = [
-    path("", views.start),
+    path("", views.start, name='start'),
     path("<int:year>/<int:month>/", views.calendar_view, name='calendar_view'),
     path("<int:year>/<int:month>/<int:day>/", views.day_view, name='day_view'),
 ]
