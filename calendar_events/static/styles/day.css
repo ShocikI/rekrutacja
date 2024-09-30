@@ -49,7 +49,6 @@ html {
     display: none;
 }
 
-/* Styl dla kontenera wydarzenia */
 .event {
     width: 100%;
     display: flex;
@@ -69,18 +68,15 @@ html {
     width: 35%;
 }
 
-/* Styl dla nagłówka wydarzenia (label) */
 .event-summary {
     display: block;
     cursor: pointer;
 }
 
-/* Domyślnie pokażemy krótkie opisy */
 .short-description {
     display: block;
 }
 
-/* Domyślnie ukrywamy szczegóły wydarzenia */
 .event-details {
     display: none;
     margin-top: 10px;
@@ -100,7 +96,6 @@ html {
 
 .event-summary {
     cursor: pointer;
-    /* Zmiana kursora, aby sugerować kliknięcie */
 }
 
 /* Zmiana symbolu po zaznaczeniu checkboxa */
@@ -139,4 +134,70 @@ html {
 .error {
     color: red;
     font-weight: 800;
+}
+
+@media (max-width: 768px) {
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        align-items: flex-start;
+    }
+
+    .calendar-container {
+        width: 90%;
+        height: fit-content;
+        margin: 0;
+        margin-top: 10px;
+        align-items: flex-start;
+    }
+
+    .header {
+        width: 100%;
+        height: 5%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .day-container {
+        width: 100%;
+    }
+
+    .event-summary h1 {
+        margin-block-start: 0;
+    }
+
+    .event {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0;
+        margin: 0;
+        margin-bottom: 1em;
+    }
+
+    .event-description {
+        width: 100%;
+        margin: 0;
+    }
+
+    .image-container {
+        width: 100%;
+    }
+
+    .event-image {
+        max-height: 20vh;
+    }
+
+    .short-description {
+        font-size: 0.9em;
+    }
+
+    .event-details {
+        padding: 5px;
+    }
+
+    .error {
+        font-size: 0.9em;
+        min-height: min-content;
+    }
 }
