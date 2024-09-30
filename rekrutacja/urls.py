@@ -18,6 +18,8 @@ from django.urls import path, re_path
 from calendar_events import views
 from django.conf.urls import handler404
 
+
+# Lista dostepnych ścieżek
 urlpatterns = [
     path("", views.start, name='start'),
     re_path(r'^(?P<year>-?\d+)/$', views.start_year, name='start_year'),
